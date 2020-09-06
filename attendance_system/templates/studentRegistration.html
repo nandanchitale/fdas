@@ -1,0 +1,231 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendence System</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" media="all">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+</head>
+
+<body>
+
+    <body>
+
+        <div class="content-agileits">
+            <h1 class="title">Student registration Form</h1>
+            <div class="left">
+                <form action="{% url 'registerStudent' %}" method="post" enctype="multipart/form-data"
+                    id="registerStudent" data-toggle="validator">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name"
+                            data-error="Enter First Name" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name"
+                            data-error="Enter Last Name" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                            data-error="This email address is invalid" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone"
+                            data-error="Enter Phone Number" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="rollNumber" name="rollNumber"
+                            placeholder="Roll Number" data-error="Enter Roll number" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="year" name="year" placeholder="Year"
+                            data-error="Enter year" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="shift" name="shift" placeholder="Shift (0 if none)"
+                            data-error="Enter Shift" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group w3ls-opt">
+                        <label for="Phone" class="control-label">Gender</label>
+                        <fieldset>
+                            <label class="w3layouts">
+                                <input type="radio" id="gender" name="gender" value="male">Male
+                            </label>
+                            <label class="w3layouts label2">
+                                <input type="radio" id="gender" name="gender" value="female">Female
+                            </label>
+                        </fieldset>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <!-- Stream video via webcam -->
+                            <video playsinline autoplay></video>
+                            <canvas id="canvas" width="600" height="450" class="hide"></canvas>
+                            <img src="" id="detect-data" name="student_img" width="600" height="450">
+                            <!-- Webcam video snapshot -->
+                            <input type="hidden" name="image" id="face-image">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="submit" class="btn btn-lg">Next</button>
+                    </div>
+                </form>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!-- js -->
+        <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+        <!-- //js -->
+
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/validator.min.js' %}"></script>
+        <!-- <script src="{% static 'js/app.js' %}"></script> -->
+        <!-- /js files -->
+        <script type="text/javascript" src="{% static 'js/formsubmit.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- Script to capture image from webcam -->
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                let video = document.getElementById('video');
+                let canvas = document.getElementById('canvas');
+                let context = canvas.getContext('2d');
+                let face_image = document.getElementById('face-image');
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+                        video.srcObject = stream;
+                        video.play();
+                    });
+                }
+
+                $.DjangoAjaxHandler2({
+                    submitBtn: '#submit',
+                    form_selector: '#registerStudent',
+                    beforeSubmission: function (form, instance) { // after errors are cleared, preprocessing can be done here
+                        $(instance.options.submitBtn).val('loading').prop('disabled', true).addClass('disabled');
+                        context.drawImage(video, 0, 0, 600, 450);
+                        face_image.value = canvas.toDataURL('image/png');
+                    },
+                    postSuccess: function (form, response, instance) {
+                        form.reset();
+                        //Materialize.updateTextFields();
+                        $('#detect-data').removeClass('hide').attr('src', response['image']);
+                        $(instance.options.submitBtn).val('Detect Face').prop('disabled', false).removeClass('disabled');
+                    },
+                });
+            })
+        </script>
+
+        <!-- <script>
+
+            const constraints = {
+                video: true
+            };
+
+            // create canvas
+            const canvas = document.createElement('canvas');
+            canvas.style.height = "600px";
+            canvas.style.width = "450px";
+
+            // get image
+            const image = document.getElementById('student_img');
+
+            // get capture button
+            const captureVideoButton =
+                document.getElementById('next');
+
+            // get video element
+            const video = document.querySelector('video');
+
+            navigator.mediaDevices.getUserMedia(constraints).
+                then((stream) => { video.srcObject = stream });
+
+            captureVideoButton.onclick = function () {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                // Other browsers will fall back to image/png
+                image.src = canvas.toDataURL('image/jpeg');
+                file.src = canvas.toDataURL('image/jpeg');
+                console.log(image.src);
+                console.log(file.src);
+
+                jQuery.noConflict();
+                var form = $('#registerStudent')[0];
+                formdata = new FormData(form);
+                var file = this.files[0];
+                console.log(formdata);
+                if (formdata) {
+                    formdata.append("image", file);
+                    jQuery.ajax({
+                        url: "registerStudent",
+                        type: "POST",
+                        data: formData,
+                        success: function (response) {
+                            $('.error').remove();
+                            console.log(response)
+                            if (response.error) {
+                                $.each(response.errors, function (name, error) {
+                                    error = '<small class="text-muted error">' + error + '</small>'
+                                    $form.find('[name=' + name + ']').after(error);
+                                })
+                            }
+                            else {
+                                alert(response.message)
+                                window.location = ""
+                            }
+                        },
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    });
+                }
+            };
+
+            // form upload
+            $(document).ready(function () {
+                $.DjangoAjaxHandler2({
+                    submitBtn: '#submit',
+                    form_selector: '#registerStudent',
+                    beforeSubmission: function (form, instance) { // after errors are cleared, preprocessing can be done here
+                        $(instance.options.submitBtn).val('loading').prop('disabled', true).addClass('disabled');
+                        context.drawImage(video, 0, 0, 600, 450);
+                        face_image.value = canvas.toDataURL('image/png');
+                    }
+                });
+            })
+
+        </script> -->
+    </body>
+
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+
+
+<body>
+
+    <div class="content-agileits">
+        <h1 class="title">Student registration Form</h1>
+        <div class="left">
+            <form action="register" method="post" enctype="multipart/form-data" data-toggle="validator">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name"
+                        data-error="Enter First Name" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name"
+                        data-error="Enter Last Name" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Email"
+                        data-error="This email address is invalid" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="Phone" name="phone" placeholder="Phone"
+                        data-error="Enter Phone Number" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="rollNumber" name="rollNumber" placeholder="Roll Number"
+                        data-error="Enter Roll number" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <input type="number" class="form-control" id="year" name="year" placeholder="Year"
+                        data-error="Enter year" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="shift" name="shift" placeholder="Shift (0 if none)"
+                        data-error="Enter Shift" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group w3ls-opt">
+                    <label for="Phone" class="control-label">Gender</label>
+
+                    <label class="w3layouts">
+                        <input type="radio" name="male" id="male" name="male" value="male">Male
+                    </label>
+                    <label class="w3layouts label2">
+                        <input type="radio" name="female" id="female" name="female" value="female">Female
+                    </label>
+
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group" id="screenshot">
+                    <!-- Stream video via webcam -->
+                    <div class="video-wrap">
+                        <video id="video" playsinline autoplay></video>
+                    </div>
+                    <!-- Webcam video snapshot -->
+                    <canvas id="canvas" width="1000" height="750" name="canvas"></canvas>
+                    <!-- Trigger canvas web API -->
+                    <div class="controller">
+                        <button id="snap" class="btn btn-info">Capture</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-lg">Next</button>
+                </div>
+            </form>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <p class="copyright-w3ls">© 2017 Student Registration Form. All Rights Reserved | Design by
+        <a href="https://w3layouts.com/" target="_blank">W3layouts</a>
+    </p>
+    <!-- js -->
+    <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+    <!-- //js -->
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/validator.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <!-- /js files -->
+
+    <script>
+
+        const canvas = document.createElement('canvas');
+        const image = document.createElement('image');
+
+        image.setAttribute(hidden = true);
+
+        image.hidden = true;
+        image.name = "student_img";
+        image.id = "student_img";
+
+        const captureVideoButton =
+            document.querySelector('#screenshot .capture-button');
+        const screenshotButton = document.querySelector('#screenshot-button');
+        const img = document.querySelector('#screenshot img');
+        const video = document.querySelector('#screenshot video');
+
+
+
+        captureVideoButton.onclick = function () {
+            navigator.mediaDevices.getUserMedia(constraints).
+                then(handleSuccess).catch(handleError);
+        };
+
+        screenshotButton.onclick = video.onclick = function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            // Other browsers will fall back to image/png
+            img.src = canvas.toDataURL('image/webp');
+            image.value = img;
+        };
+
+        function handleSuccess(stream) {
+            screenshotButton.disabled = false;
+            video.srcObject = stream;
+        }
+    </script>
+</body>
+
+</html>
