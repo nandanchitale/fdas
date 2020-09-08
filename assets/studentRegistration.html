@@ -32,7 +32,6 @@
 <body>
 
     <body>
-
         <div class="content-agileits">
             <h1 class="title">Student registration Form</h1>
             <div class="left">
@@ -111,11 +110,103 @@
         <script src="{% static 'js/validator.min.js' %}"></script>
         <!-- <script src="{% static 'js/app.js' %}"></script> -->
         <!-- /js files -->
-        <script type="text/javascript" src="{% static 'js/formsubmit.js' %}"></script>
+        <!-- <script type="text/javascript" src="{% static 'js/formsubmit.js' %}"></script> -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/webcam.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/webcam.min.js' %}"></script>
+
         <!-- Script to capture image from webcam -->
 
-        <script type="text/javascript">
+        <script>
+
+            Webcam.set({
+                width: 600,
+                height: 460,
+                image_format: 'jpeg',
+                jpeg_quality: 90
+            });
+            //Webcam.attach('#my_camera');
+
+            const constraints = {
+                video: true
+            };
+
+            // create canvas
+            const canvas = document.createElement('canvas');
+            canvas.style.height = "600px";
+            canvas.style.width = "450px";
+
+            // get image
+            const image = document.getElementById('detect-data');
+
+            // get capture button
+            const captureVideoButton =
+                document.getElementById('submit');
+
+            // get video element
+            const video = document.querySelector('video');
+
+            // get hidden tag
+            const file = document.getElementById('face-image');
+
+            const upload_url = "{% url 'registerStudent' %}";
+
+            navigator.mediaDevices.getUserMedia(constraints).
+                then((stream) => { video.srcObject = stream });
+
+            function take_snapshot() {
+                // take snapshot and get image data
+                Webcam.snap(function (data_uri) {
+                    // display results in page
+                    console.log("data uri : " + data_uri);
+
+
+                    Webcam.upload(data_uri, upload_url, function (code, text) {
+                        document.getElementById('results').innerHTML =
+                            '<h2>Here is your image:</h2>' +
+                            '<img src="' + text + '"/>';
+                    });
+                });
+            }
+
+            captureVideoButton.onclick = function () {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                // Other browsers will fall back to image/png
+                image.src = canvas.toDataURL('image/jpeg');
+                file.src = canvas.toDataURL('image/jpeg');
+
+                take_snapshot();
+                //do_ajax(image.src, file.src)
+
+                console.log("ajax");
+            }
+
+            function do_ajax(imgsrc, filesrc) {
+                $.ajax({
+                    data: {
+                        firstName: $('#firstname').val(),
+                        lastName: $('#lastname').val(),
+                        img: $(image),
+                        file: $(file)
+                    },
+                    type: 'POST',
+                    url: "{% url 'registerStudent' %}",
+
+                });
+                console.log("data passed");
+            }
+
+            jQuery.noConflict();
+
+            $.ajax({
+
+            })
+
+
+        </script>
+        <!-- <script type="text/javascript">
             $(document).ready(function () {
                 let video = document.getElementById('video');
                 let canvas = document.getElementById('canvas');
@@ -138,13 +229,13 @@
                     },
                     postSuccess: function (form, response, instance) {
                         form.reset();
-                        Materialize.updateTextFields();
+                        //Materialize.updateTextFields();
                         $('#detect-data').removeClass('hide').attr('src', response['image']);
                         $(instance.options.submitBtn).val('Detect Face').prop('disabled', false).removeClass('disabled');
                     },
                 });
             })
-        </script>
+        </script> -->
 
         <!-- <script>
 

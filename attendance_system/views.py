@@ -14,6 +14,7 @@ from django.http import JsonResponse
 
 from .forms import CreateStudentForm
 from .models import Student, Attendence
+from .detect import detect
 
 # from django.views.decorators import gzip
 
@@ -71,6 +72,27 @@ def registerStudent(request):
     studentForm = CreateStudentForm()
     if request.method == 'POST':
         student = Student()
+
+        rollnumber = request.POST['rollNumber']
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        email = request.POST['email']
+        phonenumber = request.POST['phone']
+        gender = request.POST['gender']
+        shift = request.POST['shift']
+        year = request.POST['year']
+        
+        print("rollnumber : "+rollnumber)
+        print("firstname : " + firstname)
+        print("lastname : " + lastname)
+        print("email : " + email)
+        print("Phone : " + phonenumber)
+        print("year : " + year)
+        print("Gender : " + gender)
+        print("shift : " + shift)
+
+        flag = detect()
+
         data = request.POST.get('student_img')
         print(data)
         if data:
